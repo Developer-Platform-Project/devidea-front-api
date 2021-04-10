@@ -40,6 +40,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 app.use('/auth', oauthRouter());
 app.use('/upload', uploadRouter(upload));
+app.use('/upload', express.static(uploadDirPath));
 
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {

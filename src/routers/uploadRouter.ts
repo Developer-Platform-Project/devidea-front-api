@@ -5,7 +5,8 @@ const uploadRouter = (upload: Multer) => {
   const router = Router();
 
   router.post('/profile', upload.single('profile-img'), (req, res) => {
-    res.json({ result: true });
+    const { filename } = req.file;
+    res.json({ result: true, filename });
   });
 
   return router;
