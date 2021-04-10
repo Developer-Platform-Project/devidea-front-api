@@ -5,6 +5,7 @@ import passport from 'passport';
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { createServer } from 'http';
+import fs from 'fs';
 import path from 'path';
 import configurePassport from './passport';
 import oauthRouter from './routers/oauthRouter';
@@ -23,9 +24,14 @@ if (process.env.NODE_ENV === 'production') app.use(express.static(path.resolve(_
 
 configurePassport();
 
+const uploadDirPath = path.resolve(__dirname, '..', 'upload');
+if (!fs.existsSync(uploadDirPath)) {
+  fs.mkdirSync(uploadDirPath);
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.resolve(__dirname, '..', 'upload'));
+    cb(null, uploadDirPath);
   },
   filename: (req, file, cb) => {
     cb(null, `${uuidv4()}${file.originalname.substring(file.originalname.lastIndexOf('.'))}`);
